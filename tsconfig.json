@@ -5,7 +5,8 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "packages"
   ],
   "compilerOptions": {
     "target": "es6",

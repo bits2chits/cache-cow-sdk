@@ -1,0 +1,39 @@
+{
+  "name": "@cache-cow/react-sdk",
+  "version": "1.0.0",
+  "description": "React sdk for using cache cow service",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bits2chits/cache-cow-sdk.git"
+  },
+  "publishConfig": {
+    "@cache-cow:registry": "https://npm.pkg.github.com/cache-cow"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "npx nodemon",
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js"
+  },
+  "author": "Chonk Norris",
+  "license": "GPL-3.0-only",
+  "peerDependencies": {
+    "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/qs": "^6.9.7",
+    "@types/react": "^18.0.27",
+    "@types/ws": "^8.5.4",
+    "nodemon": "^2.0.20",
+    "react": "^18.2.0",
+    "rimraf": "^4.1.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "qs": "^6.11.0",
+    "ws": "^8.12.0"
+  }
+}
