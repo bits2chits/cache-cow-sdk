@@ -1,51 +1,32 @@
-const WebSocket = require('ws');
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST"]
+  }
+});
+var cors = require('cors')
 
-// create a web socket server
-const server = new WebSocket.Server({
-  port: 8080
+app.use(cors())
+
+server.listen(8080, () => {
+  console.log('Server running on port 8080');
 });
 
-// broadcast function to send data to all connected clients
-const broadcast = (data) => {
-  server.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
-    }
-  });
-};
+io.on('connection', (socket) => {
+  console.log('New client connected');
+  sendData(socket);
+});
 
-function doSomeBroadcasts() {
+function sendData(socket) {
   let timeElapsed = 0
-  console.log('Time Elapsed', timeElapsed)
   setInterval(() => {
-    broadcast(JSON.stringify({
-      time: timeElapsed
-    }))
+    let data = {
+      message: timeElapsed
+    };
+    socket.emit('data', data);
     timeElapsed += 2
-  }, 2000)
+  }, 2000);
 }
-
-// handle incoming connections
-server.on('connection', (ws) => {
-  console.log('Client connected');
-
-  // send some data to the client
-  doSomeBroadcasts()
-
-  // handle incoming messages from the client
-  ws.on('message', (message) => {
-    console.log(`Received message: ${message}`);
-    broadcast(`Server received: ${message}`);
-  });
-
-  // handle client disconnection
-  ws.on('close', () => {
-    console.log('Client disconnected');
-  });
-
-  ws.on('error', (e) => {
-    console.log(e)
-  })
-});
-
-console.log('Web socket server is running on port 8080');

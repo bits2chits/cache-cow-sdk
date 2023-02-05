@@ -86,6 +86,6 @@ export default class CacheCowApi {
     //   }
     //   throw new CacheCowApiError(`Error fetching streams: ${(e as Error).message}`)
     // }
-    return muNames.map((n: string) => ({ muName: n, socket: 'ws://localhost:8080' }))
+    return muNames.map((n: string) => ({ muName: n, socket: 'localhost:8080' }))
   }
 }

@@ -39,6 +39,7 @@
     "ava": "^3.14.0",
     "ava-fast-check": "^4.0.0",
     "codecov": "^3.8.1",
+    "cors": "^2.8.5",
     "docs-ts": "^0.5.3",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^6.6.0",
@@ -48,13 +49,16 @@
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-security": "^1.4.0",
+    "express": "^4.18.2",
     "fast-check": "^2.10.0",
+    "http": "0.0.1-security",
     "lerna": "^6.4.1",
     "lint-staged": "^10.5.3",
     "nyc": "^15.1.0",
     "pre-commit": "^1.2.2",
     "prettier": "2.2.1",
     "rimraf": "^3.0.2",
+    "socket.io": "^4.5.4",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
   },
@@ -82,5 +86,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "socket.io-client": "^4.5.4"
+  }
 }

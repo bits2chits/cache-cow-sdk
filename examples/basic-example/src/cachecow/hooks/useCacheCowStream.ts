@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { w3cwebsocket as W3CWebSocket } from "websocket"
+// import { w3cwebsocket as W3CWebSocket } from "websocket"
+import { io, Socket } from 'socket.io-client';
 import { CacheCowStream } from '../types/api'
 import useCacheCowDispatch from './useCacheCowDispatch'
 import useCacheCowState from './useCacheCowState'
@@ -26,8 +27,8 @@ export default function useCacheCowStream() {
     if (streams.length === 0 || !dispatch || initialized) {
       return
     }
-    const sockets: W3CWebSocket[] = streams.map((s: CacheCowStream) => {
-      const socket = new W3CWebSocket(s.socket)
+    const sockets: Socket<any, any>[] = streams.map((s: CacheCowStream) => {
+      const socket = io(s.socket)
 
       // socket.onopen = () => {
       //   setState('OPEN');
@@ -37,10 +38,10 @@ export default function useCacheCowStream() {
       //   setState('CLOSED');
       // };
 
-      socket.onmessage = (event: any) => {
-        console.log('*** EVENT ***', event)
-        dispatch({ ...state, [s.muName]: JSON.parse(event.data) });
-      };
+      socket.on('data', (event: any) => {
+        console.log('*** EVENT ***', event, state)
+        dispatch({ ...state, [s.muName]: event });
+      });
 
       return socket
     })
@@ -48,9 +49,11 @@ export default function useCacheCowStream() {
     setInitialized(true)
     return () => {
       sockets.forEach(socket => {
-        if (socket.readyState === 1) { // <-- This is important
-          socket.close();
-        } 
+        // if (socket.readyState === 1) { // <-- This is important
+          socket.off('connect');
+          socket.off('disconnect');
+          socket.off('pong');
+        // } 
       });
     };
   }, [dispatch, state, streams, initialized]);
