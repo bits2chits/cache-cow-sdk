@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import WebSocket from 'ws'
+import { w3cwebsocket as W3CWebSocket } from "websocket"
 import { CacheCowStream } from '../types/api'
 import useCacheCowDispatch from './useCacheCowDispatch'
 import useCacheCowState from './useCacheCowState'
@@ -8,6 +8,7 @@ export default function useCacheCowStream() {
   const state = useCacheCowState()
   const { api, dispatch } = useCacheCowDispatch()
   const [streams, setStreams] = useState<CacheCowStream[]>([])
+  const [initialized, setInitialized] = useState<boolean>(false)
 
   // get streams
   useEffect(() => {
@@ -19,14 +20,14 @@ export default function useCacheCowStream() {
       setStreams(streams)
     }
     getStreams()
-  }, [api])
+  }, [api, state])
 
   useEffect(() => {
-    if (streams.length === 0 || !dispatch) {
+    if (streams.length === 0 || !dispatch || initialized) {
       return
     }
-    const sockets: WebSocket[] = streams.map((s: CacheCowStream) => {
-      const socket = new WebSocket(s.socket)
+    const sockets: W3CWebSocket[] = streams.map((s: CacheCowStream) => {
+      const socket = new W3CWebSocket(s.socket)
 
       // socket.onopen = () => {
       //   setState('OPEN');
@@ -43,11 +44,16 @@ export default function useCacheCowStream() {
 
       return socket
     })
-
+    console.log(sockets)
+    setInitialized(true)
     return () => {
-      sockets.forEach(socket => socket.close());
+      sockets.forEach(socket => {
+        if (socket.readyState === 1) { // <-- This is important
+          socket.close();
+        } 
+      });
     };
-  }, [dispatch, state]);
+  }, [dispatch, state, streams, initialized]);
 
     return state;
 }

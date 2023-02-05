@@ -12,7 +12,7 @@ class CacheCowApiError extends Error {
   }
 }
 
-const API_URL: string = process.env.CACHECOW_API_URL || 'https://cachecow.io/api'
+const API_URL: string = process.env.CACHECOW_API_URL || 'ws://cachecow.io/api'
 
 export default class CacheCowApi {
   apiKey: string
@@ -86,6 +86,6 @@ export default class CacheCowApi {
     //   }
     //   throw new CacheCowApiError(`Error fetching streams: ${(e as Error).message}`)
     // }
-    return muNames.map((n: string) => ({ muName: n, socket: 'localhost:8080' }))
+    return muNames.map((n: string) => ({ muName: n, socket: 'ws://localhost:8080' }))
   }
 }
